@@ -39,12 +39,15 @@ items = [
         "stock": False
     }]
 
+
+# /items?id=5
+# /items?name=mouse
 @app.get("/items")
 async def list_items(
     start: int = 0, 
     end: int = 10,
     name: str = None,
-    id: int = None
+    id: int = None,
     ):
     if id:
         item = next((item for item in items if item['id'] == id), None)
@@ -57,11 +60,26 @@ async def list_items(
         if not item:
             return {"message": f"Name ({name}) not found"}
         return item
-        
     return items[start:end]
 
+@app.get("/items/price")
+async def get_price(range: int = None):
+    sorted_items = sorted(items, key=lambda x:x["price"], reverse=True)
+    if range:
+        filter_items = [item for item in items if item['price'] <= range]
+        return filter_items
+    return sorted_items
+
+@app.get("/items/stock")
+async def in_stock(stock: bool = True):
+    if not stock:
+        return [item for item in items if item["stock"] == False ]
+    else:
+        return [item for item in items if item["stock"] == True ]
+        
+    
 
 
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", reload=True)
+    uvicorn.run("Query_Parameters/main:app", reload=True)
