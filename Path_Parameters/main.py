@@ -36,4 +36,4 @@ async def get_model(model_name: ModelName):
 
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", reload=True)
+    uvicorn.run("Path_Parameters/main:app", reload=True)

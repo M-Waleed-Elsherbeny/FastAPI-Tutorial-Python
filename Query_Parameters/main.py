@@ -62,6 +62,8 @@ async def list_items(
         return item
     return items[start:end]
 
+
+# /items/price?range=100
 @app.get("/items/price")
 async def get_price(range: int = None):
     sorted_items = sorted(items, key=lambda x:x["price"], reverse=True)
@@ -70,6 +72,8 @@ async def get_price(range: int = None):
         return filter_items
     return sorted_items
 
+
+# /items/stock?stock=false
 @app.get("/items/stock")
 async def in_stock(stock: bool = True):
     if not stock:
