@@ -10,6 +10,22 @@ class Item(BaseModel):
     price: float                       # Required but can't be null
     tax: float | None = None           # Optional with default value = null
 
+"""
+    {
+        "name": "Shoes",
+        "discretion": "",
+        "price": 0,
+        "tax": null
+    }
+
+    {
+        "name": "string",
+        "discretion": "",
+        "price": 10,
+        "tax": 0.14,
+        "total_price": 11.4
+}
+"""
 @app.post("/items")
 async def create_item(item: Item):
     item_dict = item.model_dump()
@@ -19,7 +35,9 @@ async def create_item(item: Item):
     return item_dict
 
 
-
+@app.put("/items/{item_id}")
+async def update_item(item_id: int, item: Item):
+    return {"item_id": item_id, **item.model_dump()}
 
 
 
