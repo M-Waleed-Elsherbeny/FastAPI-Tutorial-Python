@@ -12,7 +12,7 @@ async def root():
 
 # http://127.0.0.1:8000/validate?name=Mohammed
 @app.get('/validate')
-def get_item(name: str = Query(default = ..., max_length=50, min_length=3, regex="^[a-zA-Z\s]+$")):
+def get_item(name: str = Query(default = ..., max_length=50, min_length=3, regex=r"^[a-zA-Z\s]+$")):
     return {"name": name} # default = ... ==> this field is required
 
 if __name__ == "__main__":
