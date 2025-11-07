@@ -1,1 +1,1 @@
-from .db import connect, session
+from .db import connect, session, User

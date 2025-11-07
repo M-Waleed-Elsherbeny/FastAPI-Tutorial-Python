@@ -19,7 +19,6 @@ class DB:
 
 class User(Base):
     __tablename__ = "users"
-
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(30), nullable= False)
     age: Mapped[int] = mapped_column(Integer, nullable= True)
@@ -32,3 +31,6 @@ class User(Base):
 db = DB()
 connect = db.connect_db()
 session = db.create_session()
+
+
+
