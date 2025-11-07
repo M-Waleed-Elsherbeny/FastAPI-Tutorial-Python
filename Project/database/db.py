@@ -6,7 +6,7 @@ class Base(DeclarativeBase):
     pass
 
 class DB:
-    BASE_DIR = os.path.dirname("./Project")
+    BASE_DIR = os.path.dirname("./")
     connect = "sqlite:///" + os.path.join(BASE_DIR, "users.db")
     engine = None
 

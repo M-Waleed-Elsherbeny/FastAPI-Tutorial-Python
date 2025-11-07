@@ -3,18 +3,18 @@ import uvicorn
 
 from database import connect, session, User
 
-# def add_user_to_db():
-#     with session as s:
-#         user1 = User(
-#             name = "Mohammed",
-#             age = 35
-#         )
-#         user2 = User(
-#             name = "Nesma",
-#             age = 30
-#         )
-#         s.add_all([user1, user2])
-#         s.commit()
+def add_user_to_db():
+    with session as s:
+        user1 = User(
+            name = "Mohammed",
+            age = 35
+        )
+        user2 = User(
+            name = "Nesma",
+            age = 30
+        )
+        s.add_all([user1, user2])
+        s.commit()
 
 app = FastAPI()
 
@@ -24,8 +24,8 @@ async def root():
 
 
 @app.get("/api/users", tags=["User"])
-def get_all_users():
-    # add_user_to_db()
+async def  get_all_users():
+    await add_user_to_db()
     session.query(User).all()
 
 
