@@ -1,5 +1,5 @@
 from sqlalchemy import create_engine, Integer, String
-from sqlalchemy.orm import sessionmaker, DeclarativeBase, mapped_column, Mapped, Session
+from sqlalchemy.orm import DeclarativeBase, mapped_column, Mapped, Session
 import os
 
 class Base(DeclarativeBase):
@@ -7,7 +7,7 @@ class Base(DeclarativeBase):
 
 class DB:
     BASE_DIR = os.path.dirname("./")
-    connect = "sqlite:///" + os.path.join(BASE_DIR, "users.db")
+    connect = "sqlite:///" + os.path.join(BASE_DIR, "users.sqlite")
     engine = None
 
     def connect_db(self):
@@ -17,8 +17,8 @@ class DB:
     def create_session(self):
         return Session(bind=self.engine)
 
-class User(Base):
-    __tablename__ = "users"
+class Client(Base):
+    __tablename__ = "clients"
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(30), nullable= False)
     age: Mapped[int] = mapped_column(Integer, nullable= True)

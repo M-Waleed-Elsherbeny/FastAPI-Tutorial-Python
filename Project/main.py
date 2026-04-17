@@ -1,20 +1,22 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 import uvicorn
+from sqlalchemy.orm import Session
 
-from database import connect, session, User
+from database import session, Client
+from dependencies import get_db
 
-def add_user_to_db():
-    with session as s:
-        user1 = User(
-            name = "Mohammed",
-            age = 35
-        )
-        user2 = User(
-            name = "Nesma",
-            age = 30
-        )
-        s.add_all([user1, user2])
-        s.commit()
+# def add_user_to_db():
+#     with session as s:
+#         user1 = User(
+#             name = "Mohammed",
+#             age = 35
+#         )
+#         user2 = User(
+#             name = "Akram",
+#             age = 30
+#         )
+#         s.add_all([user1, user2])
+#         s.commit()
 
 app = FastAPI()
 
@@ -25,8 +27,20 @@ async def root():
 
 @app.get("/api/users", tags=["User"])
 async def  get_all_users():
-    await add_user_to_db()
-    session.query(User).all()
+    # await add_user_to_db()
+    return session.query(Client).all()
+
+
+
+
+@app.get("/api/users/{id}", tags=["Depends"])
+async def  get_all_users(id: int, db: Session = Depends(get_db)):
+    return db.query(Client).filter(Client.id == id).first()
+
+@app.post("/api/add-user", tags=["Add User"])
+async def  add_user(user: Client, db: Session = Depends(get_db)):
+    await db.add(user)        
+    return user
 
 
 if __name__ == "__main__":
