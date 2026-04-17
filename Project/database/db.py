@@ -7,7 +7,7 @@ class Base(DeclarativeBase):
 
 class DB:
     BASE_DIR = os.path.dirname("./")
-    connect = "sqlite:///" + os.path.join(BASE_DIR, "users.sqlite")
+    connect = "sqlite:///" + os.path.join(BASE_DIR, "clients.db")
     engine = None
 
     def connect_db(self):
@@ -18,13 +18,16 @@ class DB:
         return Session(bind=self.engine)
 
 class Client(Base):
-    __tablename__ = "clients"
-    id: Mapped[int] = mapped_column(primary_key=True)
+    __tablename__ = "client"
+    id: Mapped[int] = mapped_column(primary_key=True, index=True, autoincrement=True)
     name: Mapped[str] = mapped_column(String(30), nullable= False)
-    age: Mapped[int] = mapped_column(Integer, nullable= True)
+    post_url: Mapped[str] = mapped_column(String(100), nullable= False)
+    price: Mapped[float] = mapped_column(nullable= False)
+    day_number: Mapped[int] = mapped_column(nullable= False)
+    is_finished: Mapped[bool] = mapped_column(nullable= False)
 
     def __repr__(self) -> str:
-        return f"User(id={self.id!r}, name={self.name!r}, age={self.age!r})"
+        return f"Client(id={self.id!r}, name={self.name!r}, post_url={self.post_url!r}, price={self.price!r}, day_number={self.day_number!r}, is_finished={self.is_finished!r})"
     
 
 

@@ -2,21 +2,9 @@ from fastapi import FastAPI, Depends
 import uvicorn
 from sqlalchemy.orm import Session
 
-from database import session, Client
+from schemas.client_model import ClientRequest, ClientResponse
+from database import Client
 from dependencies import get_db
-
-# def add_user_to_db():
-#     with session as s:
-#         user1 = User(
-#             name = "Mohammed",
-#             age = 35
-#         )
-#         user2 = User(
-#             name = "Akram",
-#             age = 30
-#         )
-#         s.add_all([user1, user2])
-#         s.commit()
 
 app = FastAPI()
 
@@ -24,23 +12,25 @@ app = FastAPI()
 async def root():
     return {"msg": "Hello World"}
 
-
-@app.get("/api/users", tags=["User"])
-async def  get_all_users():
-    # await add_user_to_db()
-    return session.query(Client).all()
-
+@app.get("/api/get-clients", response_model=ClientResponse)
+async def get_clients(db: Session = Depends(get_db)):
+    clients = db.query(Client).all()
+    return {"client": clients}
 
 
-
-@app.get("/api/users/{id}", tags=["Depends"])
-async def  get_all_users(id: int, db: Session = Depends(get_db)):
-    return db.query(Client).filter(Client.id == id).first()
-
-@app.post("/api/add-user", tags=["Add User"])
-async def  add_user(user: Client, db: Session = Depends(get_db)):
-    await db.add(user)        
-    return user
+@app.post("/api/add-client")
+async def new_client(client: ClientRequest, db: Session = Depends(get_db)):
+    new_client = Client(
+        name=client.name,
+        post_url=client.post_url,
+        price=client.price,
+        day_number=client.day_number,
+        is_finished=client.is_finished
+    )
+    db.add(new_client)
+    db.commit()
+    db.refresh(new_client)
+    return {"msg": "Client added successfully", "new_client": new_client}
 
 
 if __name__ == "__main__":
